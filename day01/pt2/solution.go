@@ -3,34 +3,30 @@ package main
 import (
 	"log"
 	"os"
+	"sort"
 	"strconv"
 	"strings"
 )
 
-func solution_pt1() {
+func main() {
 	content, err := os.ReadFile("input.txt")
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	max := 0
 	tmp := 0
 	i := 0
+	sumedCalories := []int{}
 
 	for _, line := range strings.Split(string(content), "\n") {
 
 		trimmedLine := strings.TrimSpace(line)
 
 		if trimmedLine == "" {
+			sumedCalories = append(sumedCalories, tmp)
+			log.Printf("Elf #%d with carries %d calories", i, tmp)
 			i++
-			if tmp > max {
-				max = tmp
-				tmp = 0
-				log.Printf("Elf #%d with new max %d", i, max)
-			} else {
-				log.Printf("Elf #%d with lower than max %d", i, tmp)
-				tmp = 0
-			}
+			tmp = 0
 			continue
 		}
 
@@ -41,5 +37,8 @@ func solution_pt1() {
 		tmp += caloriesInLine
 	}
 
-	log.Println("Max calories:", max)
+	sort.Sort(sort.Reverse(sort.IntSlice(sumedCalories)))
+	maxThree := sumedCalories[0] + sumedCalories[1] + sumedCalories[2]
+
+	log.Println("Max three:", maxThree)
 }
